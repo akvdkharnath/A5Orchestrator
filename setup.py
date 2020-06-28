@@ -1,9 +1,9 @@
 import setuptools
 
-# reading long description from file 
-with open('DESCRIPTION.txt') as file: 
-	long_description = file.read() 
-
+def readme():
+    with open('README.md') as f:
+        README = f.read()
+    return README
 
 # specify requirements of your package here 
 REQUIREMENTS = ['requests','json'] 
@@ -14,7 +14,6 @@ CLASSIFIERS = [
 	'Intended Audience :: Developers', 
 	'Topic :: Software Development :: Libraries', 
 	'License :: OSI Approved :: MIT License', 
-    'Framework :: Flask',
     'Programming Language :: Python', 
 	'Programming Language :: Python :: 2', 
 	'Programming Language :: Python :: 2.6', 
@@ -29,14 +28,16 @@ CLASSIFIERS = [
 
 # calling the setup function 
 setuptools.setup(name='A5Orchestrator', 
-	version='1.0.0', 
+	version='1.0.2', 
 	description='This module helps to intigrate Orchestrator with python scripts ', 
 	long_description='This module helps to intigrate Orchestrator with python scripts ', 
+	long_description_content_type="text/markdown",
 	url='https://github.com/akvdkharnath/A5Orchestrator.git', 
 	author='Harnath Atmakuri', 
 	author_email='akvdkharnath@gmail.com', 
 	license='MIT', 
-	packages=setuptools.find_packages(), 
+	packages=['A5Package'], 
+	include_package_data=True,
 	classifiers=CLASSIFIERS, 
 	install_requires=REQUIREMENTS
 	) 
