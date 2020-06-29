@@ -14,21 +14,13 @@ CLASSIFIERS = [
 	'Intended Audience :: Developers', 
 	'Topic :: Software Development :: Libraries', 
 	'License :: OSI Approved :: MIT License', 
-    'Programming Language :: Python', 
-	'Programming Language :: Python :: 2', 
-	'Programming Language :: Python :: 2.6', 
-	'Programming Language :: Python :: 2.7', 
+    'Programming Language :: Python :: 2.7', 
 	'Programming Language :: Python :: 3', 
-	'Programming Language :: Python :: 3.3', 
-	'Programming Language :: Python :: 3.4', 
-	'Programming Language :: Python :: 3.5', 
-    'Programming Language :: Python :: Implementation :: PyPy',
-    'Typing :: Typed'
-	] 
+    ] 
 
 # calling the setup function 
 setuptools.setup(name='A5Orchestrator', 
-	version='1.0.2', 
+	version='1.0.5', 
 	description='This module helps to intigrate Orchestrator with python scripts ', 
 	long_description='This module helps to intigrate Orchestrator with python scripts ', 
 	long_description_content_type="text/markdown",
@@ -36,8 +28,9 @@ setuptools.setup(name='A5Orchestrator',
 	author='Harnath Atmakuri', 
 	author_email='akvdkharnath@gmail.com', 
 	license='MIT', 
-	packages=['A5Package'], 
+	packages=['A5Orchestrator'], 
 	include_package_data=True,
 	classifiers=CLASSIFIERS, 
-	install_requires=REQUIREMENTS
+	install_requires=REQUIREMENTS,
+	python_requires = '>=3.0',
 	) 
