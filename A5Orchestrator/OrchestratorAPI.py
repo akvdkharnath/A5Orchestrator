@@ -49,12 +49,11 @@ class Orchestrator(object):
             logging.error(f'Error while connecting: {responce.status_code}')
             self.status = False
 
-    def get_api_call(self,url,data = None,OrganizationUnitId = None):
+    def get_api_call(self,url,OrganizationUnitId = None):
         """ Helps to perform GET operations
 
         Args:
             url (string): Rest API URl to perform GET operation
-            data ([dic], optional): [description]. Data if any ,Defaults to None.
             OrganizationUnitId (int, optional): Organization or Folder id. Defaults to None.
 
         Returns:
@@ -68,11 +67,8 @@ class Orchestrator(object):
             if OrganizationUnitId != None:
                 head['X-UIPATH-OrganizationUnitId'] = str(OrganizationUnitId)
 
-            if data == None:
-                responce = requests.get(url,headers=head)
-            else:
-                responce = requests.get(url,headers=head,data=json.dumps(data))
-
+            responce = requests.get(url,headers=head)
+            
             if(responce.status_code == 200):
                 return responce.json()
             else:
@@ -243,6 +239,32 @@ class Orchestrator(object):
         responce = self.get_api_call(url)
         return responce
 
+    def get_user_login_attempts(self,user_id):
+        """Gets the user's login attempts
+
+        Args:
+            user_id (int): Id of the user
+
+        Returns:
+
+        ODataResponse[List[UserLoginAttemptDto]] 
+            @odata.context (string, optional),
+            value (Array[UserLoginAttemptDto], optional)
+        
+        UserLoginAttemptDto (list)
+            CreationTime (string, optional): The date and time when the action was performed. ,
+            ClientIpAddress (string, optional): Client IP Address ,
+            ClientName (string, optional): Client name ,
+            BrowserInfo (string, optional): Browser Information ,
+            Result (string, optional): The login's attempt result = ['Success', 'InvalidUserNameOrEmailAddress', 'InvalidPassword', 'UserIsNotActive', 'InvalidTenancyName', 'TenantIsNotActive', 'UserEmailIsNotConfirmed', 'UnknownExternalLogin', 'LockedOut', 'UserPhoneNumberIsNotConfirmed']stringEnum:"Success", "InvalidUserNameOrEmailAddress", "InvalidPassword", "UserIsNotActive", "InvalidTenancyName", "TenantIsNotActive", "UserEmailIsNotConfirmed", "UnknownExternalLogin", "LockedOut", "UserPhoneNumberIsNotConfirmed"],
+            UserId (integer, optional): The user that authenticated ,
+            Id (integer, optional)
+        """
+
+        url  = self.source_url+f"/odata/UserLoginAttempts({user_id})"
+        responce = self.get_api_call(url)
+        return responce
+    
     def toggle_role(self,role,toggle,user_id):
         """Associates/dissociates the given user with/from a role based on toggle parameter.
 
@@ -379,13 +401,116 @@ class Orchestrator(object):
         if webhook_id != None:
             url  = self.source_url+f"/odata/Webhooks({webhook_id})"
         else:
-            url  = self.source_url+f"GET /odata/Webhooks"
+            url  = self.source_url+f"/odata/Webhooks"
         responce = self.get_api_call(url)
         if responce == 200:
             return True
         else:
             return False
 
-    def create_webhook(self,**kwargs,*args):
-        """[summary]
+    def create_webhooks(self,data):
+        """Create a new webhook subscription
+
+        Args:
+            data (array[arr1]):
+            Url (string): stringMax. Length:2000,
+            Enabled (boolean),
+            Secret (string, optional): stringMax. Length:100,
+            SubscribeToAllEvents (boolean),
+            AllowInsecureSsl (boolean),
+            Events (Array[WebhookEventDto], optional),
+            
+            WebhookEventDto(dic)
+                Id (integer, optional): 
+        Returns:
+            Url (string): stringMax. Length:2000,
+            Enabled (boolean),
+            Secret (string, optional): stringMax. Length:100,
+            SubscribeToAllEvents (boolean),
+            AllowInsecureSsl (boolean),
+            Events (Array[WebhookEventDto], optional),
+            Id (integer, optional)
         """
+        url  = self.source_url+f"/odata/Webhooks"
+        responce = self.post_api_call(url,data)
+        return responce
+
+    def delete_webhooks(self,webhook_id):
+        """Delete a webhook subscription
+
+        Args:
+            webhook_id (int): id of requested workbook to delete
+        
+        Returns:
+            [boolen]: True if executed, False if not executed
+        """
+
+        url  = self.source_url+f"/odata/Webhooks({webhook_id})"
+        responce = self.delete_api_call(url)
+        if responce == 204:
+            return True
+        else:
+            return False
+
+    def get_webhooks_events(self):
+        """
+        Gets the list of event types a webhook can subscribe to
+
+        Returns:
+            [list[]]: 
+            @odata.context (string, optional),
+            value (Array[WebhookEventTypeDto], optional) 
+
+            WebhookEventTypeDto :
+            Name (string, optional): Event type key ,
+            Group (string, optional): Group
+
+        """    
+        url  = self.source_url+f"/odata/Webhooks/UiPath.Server.Configuration.OData.GetEventTypes()"
+        responce = self.get_api_call(url)
+        return responce
+     
+     def get_tenents(self):
+        """ Gets Tenents
+
+        Returns:
+        ODataResponse[List[TenantDto]] 
+            @odata.context (string, optional),
+            value (Array[TenantDto], optional)
+        
+        TenantDto (List)
+            Name (string, optional): Name of the tenant. stringMax. Length:64Reg. Exp.:^[\p{L}][\p{L}0-9-_]+$,
+            Key (string, optional): Unique Key of the tenant. ,
+            DisplayName (string, optional): Display name of the the tenant stringMax. Length:128,
+            AdminEmailAddress (string, optional): Default tenant's admin user account email address. stringMax. Length:256,
+            AdminName (string, optional): Default tenant's admin user account name. stringMax. Length:32,
+            AdminSurname (string, optional): Default tenant's admin user account surname. stringMax. Length:32,
+            AdminPassword (string, optional): Default tenant's admin user account password. Only valid for create/update operations. stringMax. Length:32,
+            LastLoginTime (string, optional): The last time a user logged in this tenant. ,
+            IsActive (boolean, optional): Specifies if the tenant is active or not. ,
+            AcceptedDomainsList (Array[string], optional): Accepted DNS list. ,
+            HasConnectionString (boolean, optional): Specifies if the the tenant has a connection string defined ,
+            ConnectionString (string, optional): DB connection string stringMax. Length:1024,
+            License (TenantLicenseDto, optional): Licensing info. ,
+            Id (integer, optional)
+        
+        TenantLicenseDto (Dic)
+            HostLicenseId (integer, optional): The host license Id. ,
+            CreationTime (string, optional): The date it was uploaded. ,
+            Code (string, optional): The license code. ,
+            Allowed (LicenseFields, optional): Contains the number of allowed licenses for each type ,
+            Id (integer, optional)
+        
+        LicenseFields (dic)
+            Unattended (integer, optional),
+            Attended (integer, optional),
+            NonProduction (integer, optional),
+            Development (integer, optional),
+            StudioX (integer, optional)        
+        """
+
+        url  = self.source_url+f"/odata/Tenants"
+        responce = self.get_api_call(url)
+        return responce
+
+    # def create_tenent():

@@ -8,3 +8,6 @@ build/lib/A5Package/__init__.py
 build/lib/A5Package/OrchestratorAPI.py
 dist/A5Orchestrator-1.0.2-py3-none-any.whl
 dist/A5Orchestrator-1.0.2.tar.gz
+a5orchestrator/test.py
+mypack.py
+work flow.xlsx
