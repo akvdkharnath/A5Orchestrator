@@ -1,10 +1,10 @@
-Orchestrator
+A5Orchestrator
 ======
 
 A simple python wrapper for Orchestrator API.
 Use it to control Orchestrator in UI Path.
 
-The code is Python 2, but Python 3 compatible.
+The code is Python 3, but Python 2 compatible.
 
 Installation
 ------------

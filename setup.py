@@ -6,7 +6,7 @@ def readme():
     return README
 
 # specify requirements of your package here 
-REQUIREMENTS = ['requests','json'] 
+REQUIREMENTS = ['requests'] 
 
 # some more details 
 CLASSIFIERS = [ 
@@ -19,8 +19,8 @@ CLASSIFIERS = [
     ] 
 
 # calling the setup function 
-setuptools.setup(name='A5Orchestrator', 
-	version='1.0.5', 
+setuptools.setup(name='a5orchestrator', 
+	version='1.0.9', 
 	description='This module helps to intigrate Orchestrator with python scripts ', 
 	long_description='This module helps to intigrate Orchestrator with python scripts ', 
 	long_description_content_type="text/markdown",
@@ -28,9 +28,10 @@ setuptools.setup(name='A5Orchestrator',
 	author='Harnath Atmakuri', 
 	author_email='akvdkharnath@gmail.com', 
 	license='MIT', 
-	packages=['A5Orchestrator'], 
+	packages=['a5orchestrator'], 
 	include_package_data=True,
 	classifiers=CLASSIFIERS, 
 	install_requires=REQUIREMENTS,
 	python_requires = '>=3.0',
+	zip_safe=False
 	) 
